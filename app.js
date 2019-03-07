@@ -1,12 +1,12 @@
 var express = require('express');
-var fs = require('fs');
-var bodyParser = require('body-parser');
-var cookieParser = require('cookie-parser');
-var mysql = require('mysql');
 var app = express();
+
+app.set('view engine', 'ejs');
+app.set('views', './routers/views');
 
 app.use('/board', require("./routers/mainRouter").router);
 app.use('/board', require("./routers/loginRouter").router);
+app.use('/board', require("./routers/postsRouter").router);
 
 app.all('*', function(req, res){
   res.status(404).send('404 ERROR');
