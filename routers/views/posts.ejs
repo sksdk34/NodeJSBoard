@@ -5,6 +5,14 @@
     <title></title>
     <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
+
+    <style>
+      .posts{
+        margin:1px;
+        border:solid black 1px;
+        padding:10px;
+      }
+    </style>
   </head>
   <body>
     <div class="target">
@@ -18,11 +26,18 @@
 </html>
 
 <script>
+  //게시글 리스트 뿌려주기
   var resultList = <%- result %>
   for(var i=0; i<resultList.length; i++){
-    $('.target').append("<div>" + resultList[i].id + "</div>");
+    $('.target').append('<div class="posts">제목 : <a href="/detail/' + resultList[i].no + '">' + resultList[i].title + '</a><br>작성자 :' + resultList[i].id + '</div>');
   }
 
+  //선택한 게시글 페이지로 이동
+  $('.posts').click(function(){
+
+  })
+
+  //게시글 작성 페이지로 이동
   $('.write').click(function(){
     location.href = "posts/create";
   })

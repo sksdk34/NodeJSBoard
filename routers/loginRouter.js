@@ -37,8 +37,8 @@ router.post('/Login', function(req, res){
     if(id == rows[0].id && pw == rows[0].pw){
       console.log('Login Success');
 
-      res.cookie('login', true);
-      res.redirect('/board/Main');
+      res.cookie('login', id);
+      res.redirect('/board/posts');
     }else{
       res.redirect('/board/Login');
     }
