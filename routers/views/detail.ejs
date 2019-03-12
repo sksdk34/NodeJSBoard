@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta>
+    <title></title>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
+
+    <style>
+      .section{
+        margin:1px;
+        border:solid black 1px;
+        padding:10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="target">
+
+    </div>
+  </body>
+</html>
+
+<script>
+  var data = <%- result %>
+
+  $(document).ready(function(){
+    $('.target').append('<div class="section"><label>작성자  </label>'+ data.id +'</div><div class="section"><label>제목  </label>'+ data.title +'</div><div class="section"><label>내용  </label>'+ data.body +'</div><div class="section"><label>작성시간  </label>'+ data.time +'</div>');
+  })
+</script>

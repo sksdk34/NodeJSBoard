@@ -31,7 +31,7 @@ router.post('/Login', function(req, res){
   console.log('입력받은 id : ' + id);
   console.log('입력받은 pw : ' + pw)
 
-  var query = 'select * from test';
+  var query = 'select * from user';
   conn.query(query, function(err, rows){
     if(err) throw err;
     if(id == rows[0].id && pw == rows[0].pw){

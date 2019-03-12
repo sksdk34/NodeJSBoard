@@ -48,29 +48,45 @@ router.post('/posts/create', function(req, res){
   var no;
 
   var query1 = 'select no from posts order by no desc limit 1';
-  conn.query(query1, function(err, rows){
+  conn.query(query1, function(err, result){
     if(err) throw err;
-    no = rows[0];
+    no = result[0].no;
   })
 
-  console.log("no : " + no);
-  console.log("title : " + title);
-  console.log("body : " + body);
-  console.log("id : " + id);
-
-  var query2 = 'insert into posts values (5, "' + title + '" , "' + body + '" , "' + id + '" ,now())';
+  var query2 = 'insert into posts values ("' + no + '", "' + title + '" , "' + body + '" , "' + id + '" ,now())';
   conn.query(query2, function(err, result){
     if(err) throw err;
 
-    res.redirect('/board/posts');
+    console.log("no : " + no);
+    console.log("title : " + title);
+    console.log("body : " + body);
+    console.log("id : " + id);
 
     console.log("Insert Success");
+
+    res.redirect('/board/posts');
   })
 })
 
 //상세보기 페이지
-router.get('/detail/:no', function(req, res){
+router.get('/posts/detail/:no', function(req, res){
   var query = 'select * from posts where no = ?'
+  conn.query(query, req.params.no, function(err, result){
+    if(err) throw err;
+
+    var detail = new Object;
+    data = result[0];
+
+    var jsonData = JSON.stringify(data);
+    console.log(jsonData);
+    res.render('detail', {result:jsonData});
+  })
+})
+
+//로그아웃
+router.get('/posts/logout', function(rqe, res){
+  res.clearCookie('login');
+  res.redirect('/board/Main');
 })
 
 exports.router = router;
