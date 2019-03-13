@@ -51,20 +51,21 @@ router.post('/posts/create', function(req, res){
   conn.query(query1, function(err, result){
     if(err) throw err;
     no = result[0].no;
-  })
+    no += 1;
 
-  var query2 = 'insert into posts values ("' + no + '", "' + title + '" , "' + body + '" , "' + id + '" ,now())';
-  conn.query(query2, function(err, result){
-    if(err) throw err;
+    var query2 = 'insert into posts (no, title, body, id, time) values (' + no + ', "' + title + '" , "' + body + '" , "' + id + '" ,now())';
+    conn.query(query2, function(err, result){
+      if(err) throw err;
 
-    console.log("no : " + no);
-    console.log("title : " + title);
-    console.log("body : " + body);
-    console.log("id : " + id);
+      console.log("no : " + no);
+      console.log("title : " + title);
+      console.log("body : " + body);
+      console.log("id : " + id);
 
-    console.log("Insert Success");
+      console.log("Insert Success");
 
-    res.redirect('/board/posts');
+      res.redirect('/board/posts');
+    })
   })
 })
 
@@ -79,12 +80,21 @@ router.get('/posts/detail/:no', function(req, res){
 
     var jsonData = JSON.stringify(data);
     console.log(jsonData);
-    res.render('detail', {result:jsonData});
+    res.render('detail', {result:jsonData, no:req.params.no});
+  })
+})
+
+//게시글 삭제
+router.get('/posts/detail/:no/delete', function(req, res){
+  var query = 'delete from posts where no = ?';
+  conn.query(query, req.params.no, function(err, result){
+    if(err) throw err;
+    res.redirect('/board/posts');
   })
 })
 
 //로그아웃
-router.get('/posts/logout', function(rqe, res){
+router.get('/posts/logout', function(req, res){
   res.clearCookie('login');
   res.redirect('/board/Main');
 })

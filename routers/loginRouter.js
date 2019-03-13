@@ -40,6 +40,8 @@ router.post('/Login', function(req, res){
       res.cookie('login', id);
       res.redirect('/board/posts');
     }else{
+      console.log('Login Failed');
+
       res.redirect('/board/Login');
     }
   })
