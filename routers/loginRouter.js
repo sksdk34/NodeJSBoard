@@ -31,8 +31,8 @@ router.post('/Login', function(req, res){
   console.log('입력받은 id : ' + id);
   console.log('입력받은 pw : ' + pw)
 
-  var query = 'select * from user';
-  conn.query(query, function(err, rows){
+  var query = 'select * from user where id = ?';
+  conn.query(query, id, function(err, rows){
     if(err) throw err;
     if(id == rows[0].id && pw == rows[0].pw){
       console.log('Login Success');

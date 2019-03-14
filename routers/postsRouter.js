@@ -44,7 +44,7 @@ router.get('/posts/create', function(req, res){
 router.post('/posts/create', function(req, res){
   var title = req.body.title;
   var body = req.body.body;
-  var id =   req.cookies.login;
+  var id = req.cookies.login;
   var no;
 
   var query1 = 'select no from posts order by no desc limit 1';
@@ -86,10 +86,23 @@ router.get('/posts/detail/:no', function(req, res){
 
 //게시글 삭제
 router.get('/posts/detail/:no/delete', function(req, res){
-  var query = 'delete from posts where no = ?';
-  conn.query(query, req.params.no, function(err, result){
+  var query1 = 'select id from posts where no = ?';
+  conn.query(query1, req.params.no, function(err, result){
     if(err) throw err;
-    res.redirect('/board/posts');
+    console.log('del test1');
+    console.log(result[0].id);
+    var id = req.cookies.login;
+    console.log(id);
+    if(result[0].id == id){
+      var query2 = 'delete from posts where no = ?';
+      conn.query(query2, req.params.no, function(err, result){
+        if(err) throw err;
+        console.log('del test2');
+        res.redirect('/board/posts');
+      })
+    }else{
+      console.log("delete failed");
+    }
   })
 })
 
