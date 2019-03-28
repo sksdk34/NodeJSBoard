@@ -19,25 +19,45 @@ router.use(cookieParser());
 
 //게시글 메인페이지
 router.get('/posts', function(req, res){
-  var query = 'select * from posts';
+  var check = req.cookies.login;
 
-  conn.query(query, function(err, rows){
-    if(err) throw err;
-    var postsList = new Array();
+  if(check != null)
+  {
+    var query = 'select * from posts';
 
-    for (var i = 0; i < rows.length; i++) {
-      var data = new Object;
-      data = rows[i];
-      postsList.push(data);
-    }
-    var jsonData = JSON.stringify(postsList);
-    res.render('posts', {result:jsonData});
-  })
+    conn.query(query, function(err, rows){
+      if(err) throw err;
+      var postsList = new Array();
+
+      for (var i = 0; i < rows.length; i++) {
+        var data = new Object;
+        data = rows[i];
+        postsList.push(data);
+      }
+      var jsonData = JSON.stringify(postsList);
+      res.render('posts', {result:jsonData});
+    })
+  }else{
+    fs.readFile(__dirname + '/views/check.html', function(err, data){
+      res.writeHead(200, {'Content-Type':'text/html'});
+      res.end(data);
+    })
+  }
 })
 
 //게시글 작성페이지
 router.get('/posts/create', function(req, res){
-  res.render('create');
+  var check = req.cookies.login;
+
+  if(check != null)
+  {
+    res.render('create');
+  }else{
+    fs.readFile(__dirname + '/views/check.html', function(err, data){
+      res.writeHead(200, {'Content-Type':'text/html'});
+      res.end(data);
+    })
+  }
 })
 
 //게시글 작성 처리
@@ -71,45 +91,103 @@ router.post('/posts/create', function(req, res){
 
 //상세보기 페이지
 router.get('/posts/detail/:no', function(req, res){
-  var query = 'select * from posts where no = ?'
-  conn.query(query, req.params.no, function(err, result){
-    if(err) throw err;
+  var check = req.cookies.login;
 
-    var detail = new Object;
-    data = result[0];
+  if(check != null)
+  {
+    var query = 'select * from posts where no = ?'
+    conn.query(query, req.params.no, function(err, result){
+      if(err) throw err;
 
-    var jsonData = JSON.stringify(data);
-    console.log(jsonData);
-    res.render('detail', {result:jsonData, no:req.params.no});
-  })
+      var detail = new Object;
+      data = result[0];
+
+      var jsonData = JSON.stringify(data);
+      console.log(jsonData);
+      res.render('detail', {result:jsonData, no:req.params.no});
+    })
+  }else{
+    fs.readFile(__dirname + '/views/check.html', function(err, data){
+      res.writeHead(200, {'Content-Type':'text/html'});
+      res.end(data);
+    })
+  }
 })
 
 //게시글 삭제
 router.get('/posts/detail/:no/delete', function(req, res){
-  var query1 = 'select id from posts where no = ?';
-  conn.query(query1, req.params.no, function(err, result){
-    if(err) throw err;
-    console.log('del test1');
-    console.log(result[0].id);
-    var id = req.cookies.login;
-    console.log(id);
-    if(result[0].id == id){
-      var query2 = 'delete from posts where no = ?';
-      conn.query(query2, req.params.no, function(err, result){
-        if(err) throw err;
-        console.log('del test2');
-        res.redirect('/board/posts');
-      })
-    }else{
-      console.log("delete failed");
-    }
-  })
+  var check = req.cookies.login;
+
+  if(check != null)
+  {
+    var query1 = 'select id from posts where no = ?';
+    conn.query(query1, req.params.no, function(err, result){
+      if(err) throw err;
+      console.log('del test1');
+      console.log(result[0].id);
+      var id = req.cookies.login;
+      console.log(id);
+      if(result[0].id == id){
+        var query2 = 'delete from posts where no = ?';
+        conn.query(query2, req.params.no, function(err, result){
+          if(err) throw err;
+          console.log('del test2');
+          res.redirect('/board/posts');
+        })
+      }else{
+        console.log("delete failed");
+      }
+    })
+  }else{
+    fs.readFile(__dirname + '/views/check.html', function(err, data){
+      res.writeHead(200, {'Content-Type':'text/html'});
+      res.end(data);
+    })
+  }
+})
+
+//검색
+router.post('/posts/search', function(req, res){
+  var check = req.cookies.login;
+
+  if(check != null)
+  {
+    var query = 'select * from posts where title like "%?%"';
+    conn.query(query, req.body.search, function(err, result){
+      if(err) throw err;
+
+      var postsList = new Array();
+      for (var i = 0; i < result.length; i++) {
+        var data = new Object;
+        data = result[i].title;
+        console.log(data);
+        postsList.push(data);
+      }
+      var jsonData = JSON.stringify(postsList);
+      res.render('search', {result:jsonData});
+    })
+  }else{
+    fs.readFile(__dirname + '/views/check.html', function(err, data){
+      res.writeHead(200, {'Content-Type':'text/html'});
+      res.end(data);
+    })
+  }
 })
 
 //로그아웃
 router.get('/posts/logout', function(req, res){
-  res.clearCookie('login');
-  res.redirect('/board/Main');
+  var check = req.cookies.login;
+
+  if(check != null)
+  {
+    res.clearCookie('login');
+    res.redirect('/board/Main');
+  }else{
+    fs.readFile(__dirname + '/views/check.html', function(err, data){
+      res.writeHead(200, {'Content-Type':'text/html'});
+      res.end(data);
+    })
+  }
 })
 
 exports.router = router;
