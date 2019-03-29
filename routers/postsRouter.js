@@ -152,20 +152,51 @@ router.post('/posts/search', function(req, res){
 
   if(check != null)
   {
-    var query = 'select * from posts where title like "%?%"';
-    conn.query(query, req.body.search, function(err, result){
+    var query = 'select * from posts where title like ?';
+    conn.query(query, '%'+ req.body.search +'%', function(err, result){
       if(err) throw err;
 
       var postsList = new Array();
       for (var i = 0; i < result.length; i++) {
         var data = new Object;
-        data = result[i].title;
-        console.log(data);
+        data = result[i];
         postsList.push(data);
       }
       var jsonData = JSON.stringify(postsList);
       res.render('search', {result:jsonData});
     })
+  }else{
+    fs.readFile(__dirname + '/views/check.html', function(err, data){
+      res.writeHead(200, {'Content-Type':'text/html'});
+      res.end(data);
+    })
+  }
+})
+
+//수정
+router.get('/posts/detail/:no/update', function(req, res){
+  var check = req.cookies.login;
+
+  if(check != null){
+    res.render('update');
+  }else{
+    fs.readFile(__dirname + '/views/check.html', function(err, data){
+      res.writeHead(200, {'Content-Type':'text/html'});
+      res.end(data);
+    })
+  }
+})
+
+//수정 처리
+router.post('/posts/detail/:no/update', function(req, res){
+  var check = req.cookies.login;
+
+  if(check != null){
+    var title = req.body.title;
+    var body = req.body.body;
+    var id = req.cookies.login;
+    var no = req.params.no;
+
   }else{
     fs.readFile(__dirname + '/views/check.html', function(err, data){
       res.writeHead(200, {'Content-Type':'text/html'});
