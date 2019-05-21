@@ -17,14 +17,7 @@ conn.connect();
 router.use(bodyParser.urlencoded({extended:false}));
 router.use(cookieParser());
 
-router.get('/Login', function(req, res){
-  fs.readFile(__dirname + '/views/Login.html', function(err, data){
-    res.writeHead(200, {'Content-Type':'text/html'});
-    res.end(data);
-  })
-})
-
-router.post('/Login', function(req, res){
+router.post('/Main', function(req, res){
   var id = req.body.id;
   var pw = req.body.pw;
 
@@ -42,7 +35,7 @@ router.post('/Login', function(req, res){
     }else{
       console.log('Login Failed');
 
-      res.redirect('/board/Login');
+      res.redirect('/board/Main');
     }
   })
 })

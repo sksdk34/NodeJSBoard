@@ -2,11 +2,12 @@
 <html>
   <head>
     <meta>
-    <title></title>
+    <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
-    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
-
+    <link rel="stylesheet" type="text/css" href="/css/base.css">
     <style>
       .section{
         margin:1px;
@@ -16,12 +17,16 @@
     </style>
   </head>
   <body>
+    <div class="header">
+      <a href="/board/posts"><h1>MS Blog</h1></a>
+    </div>
     <div class="target">
 
     </div>
 
     <div class="bottom">
-      <button type="button" class="del">삭제</button>
+      <button type="button" class="btn btn-default del">DELETE</button>
+      <button type="button" class="btn btn-default update">UPDATE</button>
     </div>
   </body>
 </html>
@@ -35,5 +40,9 @@
 
   $('.del').click(function(){
     location.href = no + '/delete';
+  })
+
+  $('.update').click(function(){
+    location.href = no + '/update';
   })
 </script>

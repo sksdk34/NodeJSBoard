@@ -197,6 +197,19 @@ router.post('/posts/detail/:no/update', function(req, res){
     var id = req.cookies.login;
     var no = req.params.no;
 
+    var query = 'update posts set title="'+ title +'", body="'+ body +'", id="'+ id +'", time=now() where no='+ no;
+    conn.query(query, function(err, result){
+      if(err) throw err;
+
+      console.log("no : " + no);
+      console.log("title : " + title);
+      console.log("body : " + body);
+      console.log("id : " + id);
+
+      console.log("Update Success");
+
+      res.redirect('/board/posts');
+    })
   }else{
     fs.readFile(__dirname + '/views/check.html', function(err, data){
       res.writeHead(200, {'Content-Type':'text/html'});

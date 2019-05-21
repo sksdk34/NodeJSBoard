@@ -1,0 +1,11 @@
+.header{
+  background-color: #6E6E6E;
+  padding: 20px;
+}
+.header h1{
+  text-align: center;
+  color: white;
+}
+.logout{
+  float:right;
+}

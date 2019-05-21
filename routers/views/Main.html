@@ -2,11 +2,47 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="/css/base.css">
+
+    <style>
+      .content{
+
+      }
+      .login{
+        position:absolute;
+        top:25%; left:50%;
+        margin-top:-100px; margin-left:-100px;
+        width:200px; height:200px;
+      }
+      .btn{
+        margin: 10px;
+      }
+    </style>
   </head>
   <body>
-    <h1>Main Page</h1>
-    <h3><a href="/board/Login">Login</a></h3>
-    <h3> <a href="/board/signup">Signup</a> </h3>
+    <div class="header">
+      <a href="/board/Main"><h1>MS Blog</h1></a>
+    </div>
+    <div class="content">
+      <div class="login">
+        <form method="post">
+          <label class="col-sm-2 control-label">ID</label>
+          <input type="text" name="id"><br>
+          <label class="col-sm-2 control-label">PW</label>
+          <input type="password" name="pw"><br>
+          <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-default">Sign in</button>
+            <button type="button" class="btn btn-default">
+              <a href="/board/signup">Signup</a>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   </body>
 </html>

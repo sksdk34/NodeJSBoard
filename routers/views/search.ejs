@@ -3,6 +3,15 @@
   <head>
     <meta>
     <title></title>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="/css/base.css">
+
     <style>
       .posts{
         margin:1px;
@@ -12,35 +21,41 @@
     </style>
   </head>
   <body>
-    <div class="top">
-      <button type="button" class="logout">로그아웃</button>
-      <form action="/board/posts/search" method="post">
-        <input type="text" name="search">
-        <input type="submit" value="검색">
-      </form>
+    <div class="header">
+      <a href="/board/posts"><h1>MS Blog</h1></a>
     </div>
+    <form class="form-inline" action="posts/search" method="post">
+      <div class="form-group">
+        <input type="text" class="form-control" id="exampleInputName2" placeholder="Search" name="search">
+      </div>
+      <button type="submit" class="btn btn-default">SEARCH</button>
+      <button type="button" class="btn btn-default logout">LOGOUT</button>
+    </form>
 
-    <div class="target"></div>
+    <table class="table table-hover">
+      <tr>
+        <th>NO</th>
+        <th>TITLE</th>
+        <th>USER</th>
+      </tr>
+    </table>
 
     <div class="create">
-      <button type="button" class="write">글쓰기</button>
+      <button type="button" class="btn btn-default write">WRITE</button>
     </div>
   </body>
 </html>
-
-<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
 
 <script>
   //게시글 리스트 뿌려주기
   var resultList = <%- result %>
   for(var i=0; i<resultList.length; i++){
-    $('.target').append('<div class="posts">제목 : <a href="posts/detail/' + resultList[i].no + '">' + resultList[i].title + '</a><br>작성자 :' + resultList[i].id + '</div>');
+      $('.table').append('<tr><th>'+ resultList[i].no +'<th><a href="posts/detail/' + resultList[i].no + '">' + resultList[i].title + '</a></th><th>' + resultList[i].id + '</th></tr>');
   }
 
   //게시글 작성 페이지로 이동
   $('.write').click(function(){
-    location.href = "posts/create";
+    location.href = "/board/posts/create";
   })
 
   //로그아웃(쿠키삭제)

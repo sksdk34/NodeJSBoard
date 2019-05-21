@@ -19,10 +19,7 @@ router.use(cookieParser());
 
 router.get('/Main', function(req, res){
   if(req.cookies.login){
-    fs.readFile(__dirname + '/views/LoginSuccess.html', function(err, data){
-      res.writeHead(200, {'Content-Type':'text/html'});
-      res.end(data);
-      })
+    res.redirect('/board/posts');
   }else{
     fs.readFile(__dirname + '/views/Main.html', function(err, data){
       res.writeHead(200, {'Content-Type':'text/html'});

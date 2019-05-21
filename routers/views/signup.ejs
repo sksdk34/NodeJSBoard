@@ -2,17 +2,39 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="/css/base.css">
+
+    <style>
+      .content{
+
+      }
+      .in{
+        position:absolute;
+        top:25%; left:50%;
+        margin-top:-100px; margin-left:-100px;
+        width:200px; height:200px;
+      }
+      </style>
   </head>
   <body>
-    <h1>Signup</h1>
-    <form method="post">
-      <label>ID</label><input type="text" name="id"><br>
-      <label>PW</label><input type="text" name="pw"><br>
-      <label>NAME</label><input type="text" name="name"><br>
-      <label>AGE</label><input type="text" name="age"><br>
-      <input type="submit" value="Signup">
-    </form>
-
+    <div class="header">
+      <a href="/board/Main"><h1>MS Blog</h1></a>
+    </div>
+    <div class="content">
+      <div class="in">
+        <form method="post">
+          <label class="col-sm-2 control-label">ID</label><input type="text" class="form-control" id="inputEmail3" placeholder="ID" name="id"><br>
+          <label class="col-sm-2 control-label">PW</label><input type="text" class="form-control" id="inputPassword3" placeholder="PASSWORD" name="pw"><br>
+          <label class="col-sm-2 control-label">NAME</label><input type="text" class="form-control" id="inputEmail3" placeholder="NAME" name="name"><br>
+          <label class="col-sm-2 control-label">AGE</label><input type="text" class="form-control" id="inputEmail3" placeholder="AGE" name="age"><br>
+          <input type="submit" class="btn btn-default" value="Signup">
+        </form>
+      </div>
+    </div>
   </body>
 </html>
