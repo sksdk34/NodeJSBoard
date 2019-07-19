@@ -10,7 +10,7 @@ var conn = mysql.createConnection({
   port:'3306',
   user:'root',
   password:'1111',
-  database:'ms'
+  database:'n_board'
 })
 conn.connect();
 
@@ -63,30 +63,22 @@ router.get('/posts/create', function(req, res){
 //게시글 작성 처리
 router.post('/posts/create', function(req, res){
   var title = req.body.title;
-  var body = req.body.body;
-  var id = req.cookies.login;
-  var no;
+  var content = req.body.content;
+  var writer = req.cookies.login;
 
-  var query1 = 'select no from posts order by no desc limit 1';
-  conn.query(query1, function(err, result){
+  var query = 'insert into posts (title, content, writer, date) values ("' + title + '" , "' + content + '" , "' + writer + '" ,now())';
+  conn.query(query, function(err, result){
     if(err) throw err;
-    no = result[0].no;
-    no += 1;
 
-    var query2 = 'insert into posts (no, title, body, id, time) values (' + no + ', "' + title + '" , "' + body + '" , "' + id + '" ,now())';
-    conn.query(query2, function(err, result){
-      if(err) throw err;
+    console.log("title : " + title);
+    console.log("body : " + content);
+    console.log("id : " + writer);
 
-      console.log("no : " + no);
-      console.log("title : " + title);
-      console.log("body : " + body);
-      console.log("id : " + id);
+    console.log("Insert Success");
 
-      console.log("Insert Success");
-
-      res.redirect('/board/posts');
-    })
+    res.redirect('/board/posts');
   })
+
 })
 
 //상세보기 페이지
@@ -103,6 +95,7 @@ router.get('/posts/detail/:no', function(req, res){
       data = result[0];
 
       var jsonData = JSON.stringify(data);
+      console.log("DETAIL" + req.params.no);
       console.log(jsonData);
       res.render('detail', {result:jsonData, no:req.params.no});
     })
@@ -120,14 +113,14 @@ router.get('/posts/detail/:no/delete', function(req, res){
 
   if(check != null)
   {
-    var query1 = 'select id from posts where no = ?';
+    var query1 = 'select writer from posts where no = ?';
     conn.query(query1, req.params.no, function(err, result){
       if(err) throw err;
       console.log('del test1');
-      console.log(result[0].id);
+      console.log(result[0].writer);
       var id = req.cookies.login;
       console.log(id);
-      if(result[0].id == id){
+      if(result[0].writer == id){
         var query2 = 'delete from posts where no = ?';
         conn.query(query2, req.params.no, function(err, result){
           if(err) throw err;
@@ -193,18 +186,18 @@ router.post('/posts/detail/:no/update', function(req, res){
 
   if(check != null){
     var title = req.body.title;
-    var body = req.body.body;
-    var id = req.cookies.login;
+    var content = req.body.content;
+    var writer = req.cookies.login;
     var no = req.params.no;
 
-    var query = 'update posts set title="'+ title +'", body="'+ body +'", id="'+ id +'", time=now() where no='+ no;
+    var query = 'update posts set title="'+ title +'", content="'+ content +'", writer="'+ writer +'", date=now() where no='+ no;
     conn.query(query, function(err, result){
       if(err) throw err;
 
       console.log("no : " + no);
       console.log("title : " + title);
-      console.log("body : " + body);
-      console.log("id : " + id);
+      console.log("content : " + content);
+      console.log("writer : " + writer);
 
       console.log("Update Success");
 

@@ -35,7 +35,7 @@
   var data = <%- result %>
   var no = <%- no %>
   $(document).ready(function(){
-    $('.target').append('<div class="section"><label>작성자  </label>'+ data.id +'</div><div class="section"><label>제목  </label>'+ data.title +'</div><div class="section"><label>내용  </label>'+ data.body +'</div><div class="section"><label>작성시간  </label>'+ data.time +'</div>');
+    $('.target').append('<div class="section"><label>작성자  </label>'+ data.writer +'</div><div class="section"><label>제목  </label>'+ data.title +'</div><div class="section"><label>내용  </label>'+ data.content +'</div><div class="section"><label>작성시간  </label>'+ data.date +'</div>');
   })
 
   $('.del').click(function(){

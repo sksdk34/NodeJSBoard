@@ -10,7 +10,7 @@ var conn = mysql.createConnection({
   port:'3306',
   user:'root',
   password:'1111',
-  database:'ms'
+  database:'n_board'
 })
 conn.connect();
 
@@ -25,15 +25,13 @@ router.post('/signup', function(req, res){
   var id = req.body.id;
   var pw = req.body.pw;
   var name = req.body.name;
-  var age = req.body.age;
 
-  var query = 'insert into user values ("' + id + '", "' + pw + '", "' + name + '", ' + age + ')';
+  var query = 'insert into user values ("' + id + '", "' + pw + '", "' + name + '")';
   conn.query(query, function(err, result){
     if(err) throw err;
     console.log("id : " + id);
     console.log("pw : " + pw);
     console.log("name : " + name);
-    console.log("age : " + age);
 
     console.log("Insert Success");
 

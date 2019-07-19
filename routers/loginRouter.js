@@ -10,7 +10,7 @@ var conn = mysql.createConnection({
   port:'3306',
   user:'root',
   password:'1111',
-  database:'ms'
+  database:'n_board'
 })
 conn.connect();
 
