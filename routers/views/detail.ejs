@@ -21,9 +21,27 @@
       <a href="/board/posts"><h1>MS Blog</h1></a>
     </div>
     <div class="target">
-
+      <div class="section">
+        <label>작성자  </label>
+        <div class="writer"></div>
+      </div>
+      <div class="section">
+        <label>제목  </label>
+        <div class="title"></div>
+      </div>
+      <div class="section">
+        <label>내용  </label>
+        <div class="content"></div>
+      </div>
+      <div class="section">
+        <label>작성시간  </label>
+        <div class="date"></div>
+      </div>
+      <div class="section">
+        <label>첨부파일  </label>
+        <div class="file"><a href="#"></a></div>
+      </div>
     </div>
-
     <div class="bottom">
       <button type="button" class="btn btn-default del">DELETE</button>
       <button type="button" class="btn btn-default update">UPDATE</button>
@@ -35,7 +53,15 @@
   var data = <%- result %>
   var no = <%- no %>
   $(document).ready(function(){
-    $('.target').append('<div class="section"><label>작성자  </label>'+ data.writer +'</div><div class="section"><label>제목  </label>'+ data.title +'</div><div class="section"><label>내용  </label>'+ data.content +'</div><div class="section"><label>작성시간  </label>'+ data.date +'</div>');
+    //콘텐츠 출력
+    $('.writer').text(data.writer);
+    $('.title').text(data.title);
+    $('.content').text(data.content);
+    $('.date').text(data.date);
+    $('.file > a').text(data.filename);
+
+    //파일 다운로드 링크
+    $('.file > a').attr('href', no + '/download');
   })
 
   $('.del').click(function(){
