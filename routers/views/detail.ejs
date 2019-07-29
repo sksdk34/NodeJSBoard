@@ -14,6 +14,9 @@
         border:solid black 1px;
         padding:10px;
       }
+      .comments{
+        padding:10px;
+      }
     </style>
   </head>
   <body>
@@ -44,7 +47,21 @@
     </div>
     <div class="bottom">
       <button type="button" class="btn btn-default del">DELETE</button>
-      <button type="button" class="btn btn-default update">UPDATE</button>
+      <button type="button" class="btn btn-default update">UPDATE</button><br><br><hr>
+    </div>
+
+    <div class="comments">
+      <form class="" method="post">
+        <textarea class="form-control" name="comment" rows="3"></textarea><br>
+        <input type="submit" value="WRITE">
+      </form>
+      <br>
+      <table class="table">
+        <tr>
+          <th><h4>Comment</h4></th>
+          <th><h4>Writer</h4></th>
+        </tr>
+      </table>
     </div>
   </body>
 </html>
@@ -63,6 +80,12 @@
     //파일 다운로드 링크
     $('.file > a').attr('href', no + '/download');
   })
+
+  //댓글 출력
+  var comments = <%- comments %>
+  for(var i=0; i<comments.length; i++){
+    $('.table').append('<tr><td>' + comments[i].comment + '</td><td>' + comments[i].writer + '</td><tr>');
+  }
 
   $('.del').click(function(){
     location.href = no + '/delete';

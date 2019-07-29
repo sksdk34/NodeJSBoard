@@ -12,7 +12,8 @@ var conn = mysql.createConnection({
   port:'3306',
   user:'root',
   password:'1111',
-  database:'n_board'
+  database:'n_board',
+  multipleStatements: true
 })
 conn.connect();
 
@@ -94,17 +95,31 @@ router.get('/posts/detail/:no', function(req, res){
 
   if(check != null)
   {
+    //게시글
     var query = 'select * from posts where no = ?'
     conn.query(query, req.params.no, function(err, result){
       if(err) throw err;
 
-      var detail = new Object;
+      var data = new Object;
       data = result[0];
 
-      var jsonData = JSON.stringify(data);
-      console.log("DETAIL" + req.params.no);
-      console.log(jsonData);
-      res.render('detail', {result:jsonData, no:req.params.no});
+      //댓글
+      var query2 = 'select * from comments where no = ?'
+      conn.query(query2, req.params.no, function(err, result){
+        if(err) throw err;
+
+        var commentList = new Array();
+        for(var i=0; i<result.length; i++){
+          var comment = new Object;
+          comment = result[i];
+          commentList.push(comment);
+        }
+        var jsonComments = JSON.stringify(commentList);
+
+        var jsonData = JSON.stringify(data);
+        console.log("DETAIL" + req.params.no);
+        res.render('detail', {result:jsonData, no:req.params.no, comments:jsonComments});
+      })
     })
   }else{
     fs.readFile(__dirname + '/views/check.html', function(err, data){
@@ -114,22 +129,45 @@ router.get('/posts/detail/:no', function(req, res){
   }
 })
 
-//파일 다운로드
+//댓글작성 처리
+router.post('/posts/detail/:no', function(req, res){
+  var check = req.cookies.login;
+
+  if(check != null)
+  {
+    var no = req.params.no;
+    var comment = req.body.comment;
+    var writer = req.cookies.login;
+
+    var query = 'INSERT INTO comments VALUES (?, ?, ?, now())'
+    conn.query(query, [no, comment, writer], function(err, result){
+      if(err) throw err;
+
+      console.log("Comment Write");
+      res.redirect('/board/posts/detail/' + req.params.no);
+    })
+  }else{
+    fs.readFile(__dirname + '/views/check.html', function(err, data){
+      res.writeHead(200, {'Content-Type':'text/html'});
+      res.end(data);
+    })
+  }
+})
+
+//첨부파일 다운로드
 router.get('/posts/detail/:no/download', function(req, res){
 
   var query = 'select * from posts where no = ?';
   conn.query(query, req.params.no, function(err, result){
 
     var originalname = result[0].filename;
-    var path = __dirname + '/../uploads/' + result[0].path;
+    var path = __dirname + '/../uploads/' + result[0].path; //파일이 실제로 저장된 경로
     console.log(originalname);
     console.log(path);
 
     res.setHeader("Content-Disposition", "attachment;filename=" + encodeURI(originalname));
     res.setHeader("Content-Type","binary/octet-stream");
-    // filePath에 있는 파일 스트림 객체를 얻어온다.(바이트 알갱이를 읽어옵니다.)
     var fileStream = fs.createReadStream(path);
-    // 다운로드 한다.(res 객체에 바이트알갱이를 전송한다)
     fileStream.pipe(res);
   })
 })
@@ -265,19 +303,6 @@ router.get('/posts/logout', function(req, res){
       res.end(data);
     })
   }
-})
-
-router.get('/test', function(req, res){
-
-  res.render('test');
-})
-
-router.post('/test', upload.single('userfile'), function(req,res){
-
-  console.log(req.file);
-  console.log(req.file.originalname);
-
-  res.send(req.file.originalname);
 })
 
 exports.router = router;
