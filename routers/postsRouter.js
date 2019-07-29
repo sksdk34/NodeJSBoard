@@ -65,28 +65,47 @@ router.get('/posts/create', function(req, res){
 
 //게시글 작성 처리
 router.post('/posts/create', upload.single('uploadFile'), function(req, res){
-  var title = req.body.title;
-  var content = req.body.content;
-  var writer = req.cookies.login;
-  var originalname = req.file.originalname;
-  var filename = req.file.filename;
 
-  var query = 'insert into posts (title, content, writer, date, filename, path) values ("' + title + '" , "' + content + '" , "' + writer + '" ,now(), "' + originalname + '", "' + filename + '")';
-  conn.query(query, function(err, result){
-    if(err) throw err;
+  if(req.file != null){ //파일첨부 했을때 작성처리
+    var title = req.body.title;
+    var content = req.body.content;
+    var writer = req.cookies.login;
+    var originalname = req.file.originalname;
+    var filename = req.file.filename;
 
-    console.log("title : " + title);
-    console.log("body : " + content);
-    console.log("id : " + writer);
-    console.log("orginalname : " + originalname);
-    console.log("filename : " + filename);
-    console.log(req.file);
+    var query = 'INSERT INTO posts (title, content, writer, date, filename, path) values (?, ?, ?, now(), ?, ?)'
+    conn.query(query, [title, content, writer, originalname, filename], function(err, result){
+      if(err) throw err;
 
-    console.log("Insert Success");
+      console.log("title : " + title);
+      console.log("body : " + content);
+      console.log("id : " + writer);
+      console.log("orginalname : " + originalname);
+      console.log("filename : " + filename);
+      console.log(req.file);
 
-    res.redirect('/board/posts');
-  })
+      console.log("Insert Success");
 
+      res.redirect('/board/posts');
+    })
+  }else{ //파일첨부 안했을 때 작성 처리
+    var title = req.body.title;
+    var content = req.body.content;
+    var writer = req.cookies.login;
+
+    var query = 'INSERT INTO posts (title, content, writer, date) values (?, ?, ?, now())'
+    conn.query(query, [title, content, writer], function(err, result){
+      if(err) throw err;
+
+      console.log("title : " + title);
+      console.log("body : " + content);
+      console.log("id : " + writer);
+
+      console.log("Insert Success");
+
+      res.redirect('/board/posts');
+    })
+  }
 })
 
 //상세보기 페이지
@@ -181,16 +200,21 @@ router.get('/posts/detail/:no/delete', function(req, res){
     var query1 = 'select writer from posts where no = ?';
     conn.query(query1, req.params.no, function(err, result){
       if(err) throw err;
-      console.log('del test1');
-      console.log(result[0].writer);
+
       var id = req.cookies.login;
-      console.log(id);
+      //작성자와 삭제를 시도하는 사용자가 같으면 삭제처리
       if(result[0].writer == id){
         var query2 = 'delete from posts where no = ?';
         conn.query(query2, req.params.no, function(err, result){
           if(err) throw err;
-          console.log('del test2');
-          res.redirect('/board/posts');
+
+          //해당 게시글의 댓글 삭제
+          var query3 = 'delete from comments where no = ?';
+          conn.query(query3, req.params.no, function(err, result){
+            if(err) throw err;
+
+            res.redirect('/board/posts');
+          })
         })
       }else{
         console.log("delete failed");
@@ -259,28 +283,50 @@ router.get('/posts/detail/:no/update', function(req, res){
 })
 
 //수정 처리
-router.post('/posts/detail/:no/update', function(req, res){
+router.post('/posts/detail/:no/update', upload.single('uploadFile'), function(req, res){
   var check = req.cookies.login;
 
   if(check != null){
-    var title = req.body.title;
-    var content = req.body.content;
-    var writer = req.cookies.login;
-    var no = req.params.no;
 
-    var query = 'update posts set title="'+ title +'", content="'+ content +'", writer="'+ writer +'", date=now() where no='+ no;
-    conn.query(query, function(err, result){
-      if(err) throw err;
+    if(req.file != null){
+      var title = req.body.title;
+      var content = req.body.content;
+      var writer = req.cookies.login;
+      var no = req.params.no;
+      var originalname = req.file.originalname;
+      var filename = req.file.filename;
+      var query = 'UPDATE posts SET title=?, content=?, writer=?, date=now(), filename=?, path=? where no = ?';
+      conn.query(query, [title, content, writer, originalname, filename, no], function(err, result){
+        if(err) throw err;
+        console.log("no : " + no);
+        console.log("title : " + title);
+        console.log("content : " + content);
+        console.log("writer : " + writer);
 
-      console.log("no : " + no);
-      console.log("title : " + title);
-      console.log("content : " + content);
-      console.log("writer : " + writer);
+        console.log("Update Success");
 
-      console.log("Update Success");
+        res.redirect('/board/posts');
+      })
+    }else{
+      var title = req.body.title;
+      var content = req.body.content;
+      var writer = req.cookies.login;
+      var no = req.params.no;
 
-      res.redirect('/board/posts');
-    })
+      var query = 'UPDATE posts SET title=?, content=?, writer=?, date=now(), filename=null, path=null where no = ?';
+      conn.query(query, [title, content, writer, no], function(err, result){
+        if(err) throw err;
+
+        console.log("no : " + no);
+        console.log("title : " + title);
+        console.log("content : " + content);
+        console.log("writer : " + writer);
+
+        console.log("Update Success");
+
+        res.redirect('/board/posts');
+      })
+    }
   }else{
     fs.readFile(__dirname + '/views/check.html', function(err, data){
       res.writeHead(200, {'Content-Type':'text/html'});
