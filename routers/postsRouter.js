@@ -204,16 +204,28 @@ router.get('/posts/detail/:no/delete', function(req, res){
       var id = req.cookies.login;
       //작성자와 삭제를 시도하는 사용자가 같으면 삭제처리
       if(result[0].writer == id){
-        var query2 = 'delete from posts where no = ?';
+        var query2 = 'SELECT * FROM posts WHERE no = ?';
         conn.query(query2, req.params.no, function(err, result){
           if(err) throw err;
 
-          //해당 게시글의 댓글 삭제
-          var query3 = 'delete from comments where no = ?';
-          conn.query(query3, req.params.no, function(err, result){
-            if(err) throw err;
+          var path = __dirname + '/../uploads/' + result[0].path;
+          fs.unlink(path, function(err){
+            if (err) throw err;
 
-            res.redirect('/board/posts');
+            console.log('File Deleted');
+            //해당 게시글의 댓글 삭제
+            var query3 = 'delete from comments where no = ?';
+            conn.query(query3, req.params.no, function(err, result){
+              if(err) throw err;
+
+              //게시글 삭제
+              var query4 = 'DELETE FROM posts WHERE no = ?';
+              conn.query(query4, req.params.no, function(err, result){
+                if(err) throw err;
+
+                res.redirect('/board/posts');
+              })
+            })
           })
         })
       }else{
@@ -349,6 +361,18 @@ router.get('/posts/logout', function(req, res){
       res.end(data);
     })
   }
+})
+
+//파일삭제 테스트
+router.get('/posts/detail/:no/fileDel', function(req, res){
+
+  var query = 'SELECT * FROM posts WHERE no = ?';
+  conn.query(query, req.params.no, function(err, result){
+    fs.unlink(__dirname + '/../uploads/' + result[0].path, function(err){
+      if (err) throw err;
+      console.log('File deleted!');
+    })
+  })
 })
 
 exports.router = router;
